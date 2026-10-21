@@ -7,6 +7,7 @@ import { Button } from "../ui/button";
 import { Input, Textarea } from "../ui/input";
 import { Label } from "../ui/label";
 import { Select } from "../ui/select";
+import { ImageUpload } from "./ImageUpload";
 import {
   motorcycleSchema,
   type MotorcycleFormValues,
@@ -50,11 +51,15 @@ export function MotorcycleFormDialog({
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<MotorcycleFormValues>({
     resolver: zodResolver(motorcycleSchema),
     defaultValues: toFormValues(initial),
   });
+
+  const imageUrl = watch("image_url");
 
   useEffect(() => {
     if (open) reset(toFormValues(initial));
@@ -208,13 +213,24 @@ export function MotorcycleFormDialog({
         </div>
 
         <div>
-          <Label htmlFor="image_url">URL Gambar</Label>
-          <Input
-            id="image_url"
-            type="text"
-            placeholder="https://cdn.example.com/motor.jpg"
-            {...register("image_url")}
+          <Label>Gambar Motor</Label>
+          <ImageUpload
+            value={imageUrl || null}
+            onChange={(url) => setValue("image_url", url || "", { shouldValidate: true })}
+            disabled={isSubmitting}
           />
+          <details className="mt-2">
+            <summary className="cursor-pointer text-xs text-slate-500">
+              Atau masukkan URL manual
+            </summary>
+            <Input
+              id="image_url"
+              type="text"
+              placeholder="https://cdn.example.com/motor.jpg"
+              className="mt-2"
+              {...register("image_url")}
+            />
+          </details>
           {errors.image_url ? (
             <p className="mt-1 text-xs text-red-600">{errors.image_url.message}</p>
           ) : null}
