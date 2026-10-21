@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Upload, X, Loader2 } from "lucide-react";
 import { Button } from "../ui/button";
 import { uploadMotorcycleImage } from "../../lib/storage";
+import { handleStorageError } from "../../lib/error-handler";
 
 interface ImageUploadProps {
   value: string | null;
@@ -29,7 +30,7 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
       const url = await uploadMotorcycleImage(file);
       onChange(url);
     } catch (err: any) {
-      setError(err.message || "Gagal mengupload gambar");
+      setError(handleStorageError(err));
     } finally {
       setUploading(false);
       e.target.value = "";
@@ -95,7 +96,11 @@ export function ImageUpload({ value, onChange, disabled }: ImageUploadProps) {
           </>
         )}
       </label>
-      {error ? <p className="text-xs text-red-600">{error}</p> : null}
+      {error ? (
+        <div className="rounded-md border border-red-200 bg-red-50 p-2">
+          <p className="text-xs text-red-700">{error}</p>
+        </div>
+      ) : null}
     </div>
   );
 }
