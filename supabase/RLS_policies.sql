@@ -16,7 +16,12 @@ ALTER TABLE IF EXISTS public.faq           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS public.addons        ENABLE ROW LEVEL SECURITY;
 ALTER TABLE IF EXISTS public.booking_addons ENABLE ROW LEVEL SECURITY;
 
--- 2) POLICY UNTUK USER TERAUTENTIKASI (admin setelah login).
+-- 2) GRANT untuk role authenticated (pastikan tabel baru dapat diakses).
+GRANT USAGE ON SCHEMA public TO authenticated;
+GRANT ALL ON TABLE public.motorcycles, public.customers, public.bookings, public.faq TO authenticated;
+GRANT ALL ON TABLE public.addons, public.booking_addons TO authenticated;
+
+-- 3) POLICY UNTUK USER TERAUTENTIKASI (admin setelah login).
 --    Role anon/eksternal tanpa login: TIDAK bisa apa-apa.
 DO $$
 DECLARE
