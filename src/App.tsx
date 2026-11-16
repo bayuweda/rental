@@ -24,6 +24,9 @@ const CalendarPage = lazy(() =>
 const FaqPage = lazy(() =>
   import("./pages/FaqPage").then((m) => ({ default: m.FaqPage }))
 );
+const AddonsPage = lazy(() =>
+  import("./pages/AddonsPage").then((m) => ({ default: m.AddonsPage }))
+);
 const SettingsPage = lazy(() =>
   import("./pages/SettingsPage").then((m) => ({ default: m.SettingsPage }))
 );
@@ -49,6 +52,7 @@ function App() {
               <Route path={paths.motorcycles} element={<MotorcyclesPage />} />
               <Route path={paths.customers} element={<CustomersPage />} />
               <Route path={paths.bookings} element={<BookingsPage />} />
+              <Route path={paths.addons} element={<AddonsPage />} />
               <Route path={paths.calendar} element={<CalendarPage />} />
               <Route path={paths.faq} element={<FaqPage />} />
               <Route path={paths.settings} element={<SettingsPage />} />

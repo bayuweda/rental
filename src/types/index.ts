@@ -45,6 +45,7 @@ export interface Booking {
   total_days: number;
   price_per_day: number;
   total_price: number;
+  addons_total: number;
   status: BookingStatus;
   notes: string | null;
   created_at: string;
@@ -64,4 +65,29 @@ export interface Faq {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+}
+
+export type AddonPriceType = "per_day" | "flat";
+
+export interface Addon {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  price_type: AddonPriceType;
+  stock: number | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface BookingAddon {
+  id: string;
+  booking_id: string;
+  addon_id: string;
+  quantity: number;
+  price_snapshot: number;
+  price_type_snapshot: AddonPriceType;
+  subtotal: number;
+  created_at: string;
 }

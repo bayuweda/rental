@@ -124,6 +124,35 @@ export const faqSchema = z.object({
 
 export type FaqFormValues = z.infer<typeof faqSchema>;
 
+export const ADDON_PRICE_TYPES = ["per_day", "flat"] as const;
+
+export const addonSchema = z.object({
+  name: z
+    .string()
+    .trim()
+    .min(1, "Nama add-on wajib diisi.")
+    .max(255, "Nama add-on terlalu panjang."),
+  description: z.string().trim().max(5000).optional().or(z.literal("")),
+  price: z
+    .number({ error: "Harga wajib diisi dengan angka." })
+    .nonnegative("Harga tidak boleh negatif."),
+  price_type: z.enum(ADDON_PRICE_TYPES, {
+    error: "Pilih tipe harga yang valid.",
+  }),
+  stock: z
+    .string()
+    .trim()
+    .refine(
+      (v) => v === "" || (/^\d+$/.test(v) && Number(v) >= 0),
+      "Stok harus angka bulat >= 0 atau kosong."
+    )
+    .optional()
+    .or(z.literal("")),
+  is_active: z.boolean(),
+});
+
+export type AddonFormValues = z.infer<typeof addonSchema>;
+
 export const loginSchema = z.object({
   email: z
     .string()

@@ -1,17 +1,21 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
+  createAddon,
   createBooking,
   createCustomer,
   createFaq,
   createMotorcycle,
+  deleteAddon,
   deleteBooking,
   deleteCustomer,
   deleteFaq,
   deleteMotorcycle,
+  fetchAddons,
   fetchBookings,
   fetchCustomers,
   fetchFaqs,
   fetchMotorcycles,
+  updateAddon,
   updateBooking,
   updateBookingStatus,
   updateCustomer,
@@ -19,6 +23,7 @@ import {
   updateMotorcycle,
 } from "../lib/api";
 import type {
+  Addon,
   Booking,
   BookingStatus,
   Customer,
@@ -31,6 +36,7 @@ export const queryKeys = {
   customers: ["customers"] as const,
   bookings: ["bookings"] as const,
   faqs: ["faq"] as const,
+  addons: ["addons"] as const,
 };
 
 /* ---------------- Motorcycles ---------------- */
@@ -190,5 +196,39 @@ export function useDeleteFaq() {
   return useMutation({
     mutationFn: (id: string) => deleteFaq(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.faqs }),
+  });
+}
+
+/* ---------------- Addons ---------------- */
+
+export function useAddons() {
+  return useQuery({ queryKey: queryKeys.addons, queryFn: fetchAddons });
+}
+
+export function useCreateAddon() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (values: Partial<Addon>) => createAddon(values),
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addons }),
+  });
+}
+
+export function useUpdateAddon() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, values }: { id: string; values: Partial<Addon> }) =>
+      updateAddon(id, values),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.addons });
+      qc.invalidateQueries({ queryKey: queryKeys.bookings });
+    },
+  });
+}
+
+export function useDeleteAddon() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteAddon(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: queryKeys.addons }),
   });
 }

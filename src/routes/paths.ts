@@ -4,6 +4,7 @@ export const paths = {
   motorcycles: "/motorcycles",
   customers: "/customers",
   bookings: "/bookings",
+  addons: "/addons",
   calendar: "/calendar",
   faq: "/faq",
   settings: "/settings",

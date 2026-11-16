@@ -1,5 +1,6 @@
 import { supabase } from "./supabase";
 import type {
+  Addon,
   Booking,
   BookingStatus,
   BookingWithRelations,
@@ -203,4 +204,44 @@ export async function updateFaq(id: string, values: Partial<Faq>): Promise<Faq> 
 export async function deleteFaq(id: string): Promise<void> {
   const { error } = await supabase.from("faq").delete().eq("id", id);
   if (error) apiError(error, "FAQ gagal dihapus.");
+}
+
+/* ---------------- Addons ---------------- */
+
+export async function fetchAddons(): Promise<Addon[]> {
+  const { data, error } = await supabase
+    .from("addons")
+    .select("*")
+    .order("created_at", { ascending: false });
+  if (error) apiError(error, "Gagal mengambil data add-on.");
+  return (data ?? []) as Addon[];
+}
+
+export async function createAddon(values: Partial<Addon>): Promise<Addon> {
+  const { data, error } = await supabase
+    .from("addons")
+    .insert(values)
+    .select()
+    .single();
+  if (error) apiError(error, "Add-on gagal disimpan.");
+  return data as Addon;
+}
+
+export async function updateAddon(
+  id: string,
+  values: Partial<Addon>
+): Promise<Addon> {
+  const { data, error } = await supabase
+    .from("addons")
+    .update(values)
+    .eq("id", id)
+    .select()
+    .single();
+  if (error) apiError(error, "Add-on gagal diperbarui.");
+  return data as Addon;
+}
+
+export async function deleteAddon(id: string): Promise<void> {
+  const { error } = await supabase.from("addons").delete().eq("id", id);
+  if (error) apiError(error, "Add-on gagal dihapus.");
 }

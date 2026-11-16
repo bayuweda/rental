@@ -9,10 +9,12 @@
 -- ============================================================================
 
 -- 1) AKTIFKAN ROW LEVEL SECURITY pada tabel yang dipakai dashboard.
-ALTER TABLE IF EXISTS public.motorcycles ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.customers   ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.bookings    ENABLE ROW LEVEL SECURITY;
-ALTER TABLE IF EXISTS public.faq         ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.motorcycles   ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.customers     ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.bookings      ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.faq           ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.addons        ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public.booking_addons ENABLE ROW LEVEL SECURITY;
 
 -- 2) POLICY UNTUK USER TERAUTENTIKASI (admin setelah login).
 --    Role anon/eksternal tanpa login: TIDAK bisa apa-apa.
@@ -21,7 +23,7 @@ DECLARE
   t text;
   p text;
 BEGIN
-  FOREACH t IN ARRAY ARRAY['motorcycles','customers','bookings','faq']
+  FOREACH t IN ARRAY ARRAY['motorcycles','customers','bookings','faq','addons','booking_addons']
   LOOP
     p := 'dashboard_full_authenticated_' || t;
     EXECUTE format('DROP POLICY IF EXISTS %I ON public.%I;', p, t);
@@ -36,5 +38,5 @@ END $$;
 SELECT tablename, policyname, roles, cmd
 FROM pg_policies
 WHERE schemaname = 'public'
-  AND tablename IN ('motorcycles','customers','bookings','faq')
+  AND tablename IN ('motorcycles','customers','bookings','faq','addons','booking_addons')
 ORDER BY tablename;
